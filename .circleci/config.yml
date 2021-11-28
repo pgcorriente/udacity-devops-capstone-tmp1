@@ -23,18 +23,19 @@ jobs:
 
   containerize:
     docker:
-      - image: python:3.7.3-stretch
+      - image: circleci/golang:1.15
+        auth:
+          username: ${DOCKER_USER}
+          password: ${DOCKER_PASS}
     steps:
       - checkout
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: true
-      - run:
-          name: Build image and upload to Docker Hub
-          command: |
-            docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
-            docker build -t pgcorriente/udacity-devops-capstone-tmp:${CIRCLE_WORKFLOW_ID:0:5} .
-            docker push pgcorriente/udacity-devops-capstone-tmp:${CIRCLE_WORKFLOW_ID:0:5}
+      - run: |
+          docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+          docker build -t pgcorriente/udacity-devops-capstone-tmp:${CIRCLE_WORKFLOW_ID:0:5} .
+          docker push pgcorriente/udacity-devops-capstone-tmp:${CIRCLE_WORKFLOW_ID:0:5}
 
 # TO DO:
 # k8s_deploy

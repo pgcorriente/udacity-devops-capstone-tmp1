@@ -1,53 +1,48 @@
 version: 2.1
 
-commands:
-  # From: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
-  install_kubectl:
-    description: Downloads kubectl for Linux and installs it on the AWS CLI container
-    steps:
-      - run:
-          name: Download kubectl
-          command: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-      - run:
-          name: Install kubectl
-          command: install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
 jobs:
-  build_image:
+  lint_code:
     docker:
       - image: python:3.7.3-stretch
     steps:
       - checkout
       - restore_cache:
-          keys: [build-image]
+          keys:
+            - lint-{{ checksum "requirements.txt" }}
+            - lint-
       - run:
           name: Install dependencies
           command: make install
       - run:
           name: Lint code
           command: make lint
-      - run:
-          name: Build image
-          command: docker build -t pgcorriente/udacity-devops-capstone-tmp1 .
       - save_cache:
-          paths: [./]
-          key: build-image
+          paths:
+            - ./
+          key: lint-{{ checksum "requirements.txt" }}
 
-  upload_image:
+  containerize:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7.3-stretch
     steps:
       - checkout
-      - install_kubectl
+      - setup_remote_docker:
+          version: 19.03.13
+          docker_layer_caching: true
       - run:
-          name: Test kubectl
-          command: kubectl version --client
+          docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+          docker build -t pgcorriente/udacity-devops-capstone-tmp:${CIRCLE_WORKFLOW_ID:0:5} .
+          docker push pgcorriente/udacity-devops-capstone-tmp:${CIRCLE_WORKFLOW_ID:0:5}
 
+# TO DO:
+# k8s_deploy
+# test_cluster
+# rollback if failure?
+      
 workflows:
   default:
     jobs:
-      - build_image
-      - upload_image:
+      - lint_code
+      - containerize:
           requires:
-            - build_image
-
+            - lint_code

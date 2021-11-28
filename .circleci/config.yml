@@ -42,27 +42,7 @@ jobs:
       - run:
           name: Test kubectl
           command: kubectl version --client
-      # Rellenar
-    
-  create_kubernetes:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      # Rellenar
 
-  deploy_container:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      # Se puede unir con el paso anterior?
-
-  test_deployment:
-    docker:
-      - image: # Rellenar
-    steps:
-      # Rellenar
-      # Es necesario un rollback si el test no funciona...
-      
 workflows:
   default:
     jobs:
@@ -70,17 +50,4 @@ workflows:
       - upload_image:
           requires:
             - build_image
-      - create_kubernetes
-          requires:
-            - upload_image
-      - deploy_container
-          requires:
-            - build_image
-            - upload_image
-            - create_kubernetes
-      - test_deployment
-          requires:
-            - build_image
-            - upload_image
-            - create_kubernetes
-            - deploy_container
+

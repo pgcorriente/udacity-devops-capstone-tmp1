@@ -19,7 +19,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [build-image-${CIRCLE_WORKFLOW_ID:0:7}]
+          keys: [build-image}]
       - run:
           name: Install dependencies
           command: make install
@@ -31,7 +31,7 @@ jobs:
           command: docker build -t pgcorriente/udacity-devops-capstone-tmp1 .
       - save_cache:
           paths: [./]
-          key: build-image-${CIRCLE_WORKFLOW_ID:0:7}
+          key: build-image
 
   upload_image:
     docker:

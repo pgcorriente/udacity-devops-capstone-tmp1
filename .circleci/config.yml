@@ -10,6 +10,11 @@ jobs:
           keys:
             - lint-{{ .Environment.CACHE_VERSION }}-{{ checksum "requirements.txt" }}
       - run:
+          name: Create venv
+          command: |
+            python3 -m venv venv
+            . /venv/bin/activate
+      - run:
           name: Install dependencies
           command: make install
       - run:

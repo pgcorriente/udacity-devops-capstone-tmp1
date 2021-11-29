@@ -9,7 +9,6 @@ jobs:
       - restore_cache:
           keys:
             - lint-{{ .Environment.CACHE_VERSION }}-{{ checksum "requirements.txt" }}
-            - lint-
       - run:
           name: Install dependencies
           command: make install

@@ -1,5 +1,9 @@
 version: 2.1
 
+orbs:
+  aws-eks: circleci/aws-eks@1.1.0
+  kubernetes: circleci/kubernetes@0.12.1
+
 jobs:
   lint_code:
     docker:
@@ -38,10 +42,31 @@ jobs:
           docker push pgcorriente/udacity-devops-capstone-tmp:latest
           docker push pgcorriente/udacity-devops-capstone-tmp:${CIRCLE_WORKFLOW_ID:0:5}
 
-# TO DO:
-# k8s_deploy
-# test_cluster
-# rollback if failure?
+  k8s_deploy:
+    executor: aws-eks/python3
+    steps:
+      - checkout
+      - kubernetes/install
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: ${CLUSTER_NAME}
+          install-kubectl: true
+      - kubernetes/create-or-update-resource:
+          get-rollout-status: true
+          resource-file-path: deployment.yml
+          resource-name: deployment/${CLUSTER_NAME}
+
+  test-deployment:
+    executor: aws-eks/python3
+    steps:
+      - kubernetes/install
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: ${CLUSTER_NAME}
+      - run:
+          name: Test cluster
+          command: |
+            kubectl get svc
+            kubectl get nodes
+            kubectl get deployment
       
 workflows:
   default:
@@ -50,3 +75,12 @@ workflows:
       - containerize:
           requires:
             - lint_code
+      - k8s_deploy:
+          requires:
+            - lint_code
+            - containerize
+      - test-deployment:
+          requires:
+            - lint_code
+            - containerize
+            - k8s_deploy

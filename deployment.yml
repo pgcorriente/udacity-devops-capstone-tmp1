@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udacity-devops-nanodegree-capstone
+  labels:
+    app: udacity-devops-nanodegree-capstone
+  namespace: default
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: udacity-devops-nanodegree-capstone
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: udacity-devops-nanodegree-capstone
+    spec:
+      containers:
+        - image: pgcorriente/udacity-devops-capstone-tmp
+          imagePullPolicy: Always
+          name: udacity-devops-nanodegree-capstone
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: udacity-devops-nanodegree-capstone
+  labels:
+    app: udacity-devops-nanodegree-capstone
+spec:
+  type: LoadBalancer
+  selector:
+    app: udacity-devops-nanodegree-capstone
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP

@@ -8,7 +8,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - lint-{{ checksum "requirements.txt" }}
+            - lint-{{ .Environment.CACHE_VERSION }}-{{ checksum "requirements.txt" }}
             - lint-
       - run:
           name: Install dependencies
@@ -19,7 +19,7 @@ jobs:
       - save_cache:
           paths:
             - ./
-          key: lint-{{ checksum "requirements.txt" }}
+          key: lint-{{ .Environment.CACHE_VERSION }}-{{ checksum "requirements.txt" }}
 # IMPORTANTE - CREAR VENV Y GUARDARLO EN CACHE PARA QUEESTE DISPONIBLE EN LA SIGUIENTE FASE???
   containerize:
     docker:

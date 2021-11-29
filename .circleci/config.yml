@@ -32,6 +32,7 @@ jobs:
           version: 19.03.13
           docker_layer_caching: true
       - run: |
+          docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
           docker build -t pgcorriente/udacity-devops-capstone-tmp:${CIRCLE_WORKFLOW_ID:0:5} .
           docker tag pgcorriente/udacity-devops-capstone-tmp:${CIRCLE_WORKFLOW_ID:0:5} pgcorriente/udacity-devops-capstone-tmp:latest
           docker push pgcorriente/udacity-devops-capstone-tmp:${CIRCLE_WORKFLOW_ID:0:5}

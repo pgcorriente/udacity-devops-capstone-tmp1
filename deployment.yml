@@ -6,14 +6,14 @@ metadata:
     app: udacity-devops-nanodegree-capstone
   namespace: default
 spec:
-  replicas: 3
+  replicas: 4
   selector:
     matchLabels:
       app: udacity-devops-nanodegree-capstone
   strategy:
     rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
+      maxSurge: 50%
+      maxUnavailable: 50%
     type: RollingUpdate
   template:
     metadata:

@@ -40,5 +40,4 @@ The Github repo contains the following:
 
 EKS external URL where the Flask application is running: http://ae92011da09ac4a3e9a4e54f961de5d3-697290224.us-west-2.elb.amazonaws.com/
 
-
-Docker repository: https://github.com/pgcorriente/udacity-devops-capstone-tmp1
+Docker repository: https://hub.docker.com/r/pgcorriente/udacity-devops-capstone-tmp

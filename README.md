@@ -37,10 +37,10 @@ The Github repo contains the following:
 * .circleci/config.yml - CircleCI configuration file containing the description of the CI/CD pipeline.
 * deployment.yml - Cloudformation EKS configuration file. Defines a Kubernetes cluster, the Docker image that will be pulled (see above) and the type of updates (RollingUpdate).
 * screenshots - folder containing screenshots of:
-+ a failed lint operation 
-+ a successful lint operation 
-+ application running in EKS 
-+ application running in EKS after an update
+  + a failed lint operation 
+  + a successful lint operation 
+  + application running in EKS 
+  + application running in EKS after an update
 
 EKS external URL where the Flask application is running: http://ae92011da09ac4a3e9a4e54f961de5d3-697290224.us-west-2.elb.amazonaws.com/
 
